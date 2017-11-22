@@ -14,7 +14,7 @@
 	<!-- spring配置文件路径 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:/applicationContext*.xml</param-value>
+		<param-value>classpath:/applicationContext*.xml</param-value>
 	</context-param>
 	<!-- 把servlet交给spring管理 -->
 	<servlet>
