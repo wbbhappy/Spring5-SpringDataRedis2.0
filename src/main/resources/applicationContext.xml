@@ -3,7 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:cache="http://www.springframework.org/schema/cache"
-	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
@@ -16,165 +15,20 @@
     http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/cache
     http://www.springframework.org/schema/cache/spring-cache.xsd
-    http://www.springframework.org/schema/security
-    http://www.springframework.org/schema/security/spring-security.xsd
     http://www.springframework.org/schema/aop 
     http://www.springframework.org/schema/aop/spring-aop.xsd
     http://www.springframework.org/schema/task 
-    http://www.springframework.org/schema/task/spring-task.xsd"
-    
+    http://www.springframework.org/schema/task/spring-task.xsd"    
 	default-autowire="byName">
-
-	<!-- 默认的注解映射的支持 -->
+	
+	<!-- 启动注解 -->
 	<mvc:annotation-driven />
-	<mvc:view-controller path="/" view-name="redirect:/admin/login"/>
-	<mvc:resources mapping="/resources/**" location="/resources/*" />
-	
-	<context:annotation-config />
-	<!-- 自动扫描的包名 -->
+	<!-- <context:annotation-config /> -->
 	<!-- 设置需要进行Spring注解扫描的类包 -->
-	<context:component-scan base-package="com" />
-
-	<!-- 参数配置 -->
-	<context:property-placeholder location="classpath:application.properties" />
-	<!-- 数据源配置 -->
-	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
-		init-method="init" destroy-method="close">
-		<!-- 设置JDBC驱动名称 -->
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<!-- 设置JDBC连接URL -->
-		<property name="url" value="${jdbc.url}" />
-		<!-- 设置数据库用户名 -->
-		<property name="username" value="${jdbc.username}" />
-		<!-- 设置数据库密码 -->
-		<property name="password" value="${jdbc.password}" />
-		<!-- 设置连接池初始值 -->
-		<property name="initialSize" value="5" />
-		<!-- 设置连接池最大值 -->
-		<property name="maxActive" value="120" />
-		<!-- 设置连接池最小空闲值 -->
-		<property name="minIdle" value="20" />
-		<property name="maxWait" value="60000" />
-		<property name="timeBetweenEvictionRunsMillis" value="60000" />
-		<property name="minEvictableIdleTimeMillis" value="300000" />
-		<property name="validationQuery" value="SELECT 1 FROM DUAL " />
-		<property name="testWhileIdle" value="true" />
-		<property name="testOnBorrow" value="false" />
-		<property name="testOnReturn" value="false" />
-	</bean>
-
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<!-- <property name="mappingResources"> <list> <value>org/springframework/samples/petclinic/hibernate/petclinic.hbm.xml 
-			</value> </list> </property> -->
-		<property name="packagesToScan">
-			<list>
-				<value>com.entity</value>
-			</list>
-		</property>
-		<!-- <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</property> -->
-		<property name="hibernateProperties">
-			<!-- <value> hibernate.dialect=${hibernate.dialect} hibernate.show_sql=true 
-				</value> -->
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-				<!-- SQL Server的Dialect方言配置 -->
-				<!-- <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop> -->
-				<!-- Oracle的Dialect方言配置 -->
-				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.use_outer_join">true</prop>
-				<prop key="hibernate.use_sql_comments">true</prop>
-				<prop key="hibernate.jdbc.fetch_size">50</prop>
-				<prop key="hibernate.jdbc.batch_size">25</prop>
-				<prop key="javax.persistence.validation.mode">none</prop>
-				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext
-				</prop>
-				<prop key="cache.use_query_cache">true</prop>
-				<!-- <prop key="hibernate.hbm2ddl.auto">update</prop> -->
-				<prop key="cache.use_second_level_cache">true</prop>
-				<prop key="cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
-				</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!-- 使用AspectJ方式配置AOP -->
-	<aop:aspectj-autoproxy proxy-target-class="true" />
-	<aop:config proxy-target-class="true" />
-
-	<!-- 使用注解方式定义事务 -->
-	<tx:annotation-driven proxy-target-class="true"
-		transaction-manager="transactionManager" />
-
-	<!-- 配置事务管理器 -->
-	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-
-	<!-- 配置事务传播特性 -->
-	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<!-- <tx:method name="get*" read-only="true" /> -->
-			<tx:method name="load*" read-only="true" />
-			<tx:method name="find*" read-only="true" />
-			<tx:method name="*" propagation="REQUIRED" />
-		</tx:attributes>
-	</tx:advice>
-	<!-- 配置哪些类的哪些方法参与事务 -->
-	<aop:config>
-		<aop:advisor
-			pointcut="execution(* com.service .*..*(..)) or execution(* core.service .*..*(..))"
-			advice-ref="transactionAdvice" />
-	</aop:config>
-
+	<context:component-scan base-package="com.controller" />
 	
-	<!-- 拦截器  --> 
-	<mvc:interceptors>
-		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
-		<bean class="com.authority.AuthorityInterceptor"></bean>
-		<mvc:interceptor> 
-			<mvc:mapping path="/cms/**"/> 
-			<bean class="com.interceptor.CmsInterceptor"></bean> 
-		</mvc:interceptor>		
-	</mvc:interceptors>
+	<!-- 使用AspectJ方式配置AOP，解决AOP不拦截内部调用 -->
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
 
-	<!-- Spring帮助类 -->
-	<bean id="springUtils" class="com.util.SpringUtils"></bean>	
-	
-	<!-- 开启定时器  -->  
-    <task:annotation-driven scheduler="qbScheduler" mode="proxy"/>  
-    <task:scheduler id="qbScheduler" pool-size="10"/>
-	
-	<!-- SMTP邮件服务配置 -->
-	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.timeout">25000</prop>
-				<prop key="mail.smtp.socketFactory.fallback">true</prop>
-				<!-- SSL连接配置 -->
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
-			</props>
-		</property>
-	</bean>
-    
-	<!-- SMTP邮件异步发送 -->
-	<bean id="taskExecutor"
-		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<!-- 核心线程数 -->
-		<property name="corePoolSize" value="10" />
-		<!-- 最大线程数 -->
-		<property name="maxPoolSize" value="50" />
-		<!-- 最大队列数 -->
-		<property name="queueCapacity" value="10000" />
-		<!-- 线程池维护线程所允许的空闲时间 -->
-		<property name="keepAliveSeconds" value="60" />
-	</bean>
+
 </beans>
