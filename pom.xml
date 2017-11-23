@@ -96,7 +96,7 @@
     </dependency>   
   	<!-- aop end-->
   	
-  	<!-- Jackson start @ResponseBody注解-->  
+  	<!-- Jackson start @ResponseBody注解，spring5得用2.9版本-->  
     <dependency>  
         <groupId>com.fasterxml.jackson.core</groupId>  
         <artifactId>jackson-databind</artifactId>  
@@ -150,7 +150,7 @@
 	</dependency>
 	<!-- jsp end-->
 	
-	<!-- Redis start -->
+	<!-- Redis start （redis这些版本要求用spring5）-->
 	<dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-redis</artifactId>
@@ -160,8 +160,7 @@
 	    <groupId>redis.clients</groupId>
 	    <artifactId>jedis</artifactId>
 	    <version>2.9.0</version>
-	</dependency>
-    
+	</dependency>   
     <!-- Redis end -->
     
   </dependencies>
