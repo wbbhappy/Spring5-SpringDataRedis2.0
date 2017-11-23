@@ -5,6 +5,8 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans.xsd 
     http://www.springframework.org/schema/tx 
@@ -24,8 +26,9 @@
 	<!-- 启动注解 -->
 	<mvc:annotation-driven />
 	<!-- <context:annotation-config /> -->
+	
 	<!-- 设置需要进行Spring注解扫描的类包 -->
-	<context:component-scan base-package="com.controller" />
+	<context:component-scan base-package="com.controller,core.config" />
 	<!-- 配置文件获取 -->
 	<bean id="propertyConfig"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -36,8 +39,13 @@
 			<value>UTF-8</value>
 		</property>
 	</bean>
+	
 	<!-- 使用AspectJ方式配置AOP，解决AOP不拦截内部调用 -->
-	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
-
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->	
+		
+	<!-- 启用缓存注解功能 -->
+    <cache:annotation-driven cache-manager="redisCacheManager"/> 
+	<bean id="RedisUtil" class="core.util.RedisUtil" />
+	
 
 </beans>
