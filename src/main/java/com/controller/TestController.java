@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,10 +23,14 @@ public class TestController {
 	@Autowired
 	private RedisUtil redisUtil;
 	
+	@Autowired
+	@Qualifier("redisCacheManager")
+	private CacheManager cacheManager;
+	
 	@RequestMapping(value="index", method = RequestMethod.GET)
 	public Object index(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("/test");
-		
+		System.out.println(cacheManager.getCache("user"));
 		return mv;
 	}
 	
