@@ -64,7 +64,7 @@ public class TestController {
 		user.setUsername("wbb");
 		user.setPassword("happy");
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("user", user);
+		map.put("user", user.toString());
 		redisUtil.setCacheMap("map", map);
 		System.out.println("插入map数据成功！");
 	}
