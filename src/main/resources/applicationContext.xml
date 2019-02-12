@@ -26,7 +26,19 @@
 			default-autowire="byName">
 	
 	<!-- 启动注解 -->
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=utf-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 	<!-- <context:annotation-config /> -->
 	<!-- 设置需要进行Spring注解扫描的类包 -->
 	<context:component-scan base-package="com.controller,core.config" />

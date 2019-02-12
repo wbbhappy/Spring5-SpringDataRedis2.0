@@ -1,22 +1,15 @@
 package core.util;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.BoundSetOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class RedisUtil {
 
@@ -51,6 +44,17 @@ public class RedisUtil {
 	 */
 	public Object getCacheObject(String key/* ,ValueOperations<String,T> operation */) {
 		return redisTemplate.opsForValue().get(key);
+	}
+
+	/**
+	 * 删除缓存的基本对象。
+	 * @param key
+	 */
+	public void deleteByKey(String key) {
+		Set<String> keys = redisTemplate.keys(key);
+		if (CollectionUtils.isNotEmpty(keys)) {
+			redisTemplate.delete(keys);
+		}
 	}
 
 	/**

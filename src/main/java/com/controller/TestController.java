@@ -25,20 +25,10 @@ public class TestController {
 	private CacheManager cacheManager;
 	
 	@RequestMapping(value="test", method = RequestMethod.GET)
-	public Object index(HttpServletRequest request) {
+	public Object test(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("/test");
 		System.out.println(cacheManager.getCache("user"));
 		return mv;
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@ResponseBody
-	@RequestMapping(value="json", method = RequestMethod.GET)
-	public Object json(HttpServletRequest request) {
-		Map m = new HashMap();
-		m.put("key", "value");
-		redisUtil.setCacheMap("m", m);
-		return redisUtil.getCacheMap("m");
 	}
 
 	@ResponseBody
@@ -53,7 +43,38 @@ public class TestController {
 	@ResponseBody
 	@RequestMapping(value="get", method = RequestMethod.GET)
 	public Object select(HttpServletRequest request) {
-		System.out.println("查询数据成功！");
+		System.out.println("进入查询方法！");
 		return redisUtil.getCacheObject("test");
+	}
+
+	@ResponseBody
+	@RequestMapping(value="del", method = RequestMethod.GET)
+	public void remove(HttpServletRequest request) {
+		redisUtil.deleteByKey("test");
+		System.out.println("删除数据成功！");
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value="setmap", method = RequestMethod.GET)
+	public void setmap(HttpServletRequest request) {
+		Map m = new HashMap();
+		m.put("key", "value");
+		redisUtil.setCacheMap("m", m);
+		System.out.println("插入map数据成功！");
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@ResponseBody
+	@RequestMapping(value="getmap", method = RequestMethod.GET)
+	public Object getmap(HttpServletRequest request) {
+		System.out.println("进入查询map数据方法！");
+		return redisUtil.getCacheMap("m");
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value="delmap", method = RequestMethod.GET)
+	public void delmap(HttpServletRequest request) {
+		redisUtil.deleteByKey("m");
+		System.out.println("删除map数据成功！");
 	}
 }
