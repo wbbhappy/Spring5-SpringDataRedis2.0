@@ -19,6 +19,9 @@ public class TestController {
 
 	@Autowired
 	private RedisUtil redisUtil;
+
+	/*@Autowired
+	private RedisUtil2 redisUtil;*/
 	
 	@Autowired
 	@Qualifier("redisCacheManager")

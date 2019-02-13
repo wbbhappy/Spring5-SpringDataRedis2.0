@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +19,16 @@ public class RedisUtil {
 	@Autowired
 	@Qualifier("redisTemplate")
 	protected RedisTemplate<Serializable, Serializable> redisTemplateSerializable;
+
+	/*@Autowired(required = false)
+	public void setRedisTemplate(RedisTemplate redisTemplate) {
+		RedisSerializer stringSerializer = new StringRedisSerializer();
+		redisTemplate.setKeySerializer(stringSerializer);
+		redisTemplate.setValueSerializer(stringSerializer);
+		redisTemplate.setHashKeySerializer(stringSerializer);
+		redisTemplate.setHashValueSerializer(stringSerializer);
+		this.redisTemplate = redisTemplate;
+	}*/
 
 	/**
 	 * 缓存基本的对象，Integer、String、实体类等
