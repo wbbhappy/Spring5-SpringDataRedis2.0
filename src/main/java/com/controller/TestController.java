@@ -19,9 +19,6 @@ public class TestController {
 
 	@Autowired
 	private RedisUtil redisUtil;
-
-	/*@Autowired
-	private RedisUtil2 redisUtil;*/
 	
 	@Autowired
 	@Qualifier("redisCacheManager")
@@ -68,7 +65,7 @@ public class TestController {
 		user.setPassword("happy");
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("user", user.toString());
-		redisUtil.setCacheMap("map", map);
+		redisUtil.setCacheMap("maps", map);
 		System.out.println("插入map数据成功！");
 	}
 
@@ -77,14 +74,14 @@ public class TestController {
 	@RequestMapping(value="getmap", method = RequestMethod.GET)
 	public Object getMap(HttpServletRequest request) {
 		System.out.println("进入查询map数据方法！");
-		return redisUtil.getCacheMap("map");
+		return redisUtil.getCacheMap("maps");
 	}
 
 	@ResponseBody
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="delmap", method = RequestMethod.GET)
 	public void delMap(HttpServletRequest request) {
-		redisUtil.deleteByKey("map");
+		redisUtil.deleteByKey("maps");
 		System.out.println("删除map数据成功！");
 	}
 
